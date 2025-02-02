@@ -22,7 +22,7 @@ const Register = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/v1/register",
+        "https://midwife-backend.vercel.app/api/v1/register",
         formData
       );
       setMessage(res.data.message);

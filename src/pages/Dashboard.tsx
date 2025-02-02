@@ -11,7 +11,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/v1/admin/users")
+      .get("https://midwife-backend.vercel.app/api/v1/admin/users")
       .then((res) => {
         setUsers(res.data.users || []); // Ensure it's always an array
       })
@@ -21,7 +21,7 @@ const Dashboard = () => {
   const verifyUser = async (email: string) => {
     try {
       await axios.patch(
-        `http://localhost:5000/api/v1/admin/verify-user/${email}`
+        `https://midwife-backend.vercel.app/api/v1/admin/verify-user/${email}`
       );
       setUsers(
         users.map((user) =>

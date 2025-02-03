@@ -8,6 +8,7 @@ import Login from "./pages/Login.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import NotVerified from "./pages/NotVerified.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import Profile from "./pages/Profile.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -33,7 +34,7 @@ createRoot(document.getElementById("root")!).render(
           path="/profile"
           element={
             <ProtectedRoute roleRequired="verifiedUser">
-              <h2>Welcome to your profile</h2>
+              <Profile />
             </ProtectedRoute>
           }
         />

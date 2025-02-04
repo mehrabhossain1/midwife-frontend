@@ -4,8 +4,9 @@ function App() {
   return (
     <div className="flex h-screen items-center justify-center bg-gray-100 p-4">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg text-center">
-        <h1 className="mb-4 text-3xl font-bold text-gray-800">
-          Welcome to Projonmo Foundation 👋
+        <h1 className="mb-4 text-3xl font-bold text-gray-800 flex items-center">
+          <img src="midwife.png" className="w-12 " alt="" />
+          Welcome to Projonmo Foundation{" "}
         </h1>
         <p className="mb-6 text-gray-600">
           To access our platform, you need to register first. After

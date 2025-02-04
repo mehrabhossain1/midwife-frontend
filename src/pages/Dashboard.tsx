@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 const Dashboard = () => {
@@ -66,6 +67,16 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="mx-auto max-w-5xl rounded-lg bg-white p-6 shadow-lg">
+        {/* Back to Home Button */}
+        <div className="mb-4">
+          <Link
+            to="/"
+            className="inline-block rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+          >
+            ⬅ Back to Home
+          </Link>
+        </div>
+
         {/* Admin Info */}
         <div className="mb-6 flex items-center justify-between border-b pb-4">
           <h2 className="text-xl font-semibold text-gray-700">

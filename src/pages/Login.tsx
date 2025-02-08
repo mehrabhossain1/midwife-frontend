@@ -12,24 +12,57 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const getUserLocation = async () => {
+    return new Promise<{ latitude: number; longitude: number } | null>(
+      (resolve) => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              resolve({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              });
+            },
+            (error) => {
+              console.error("Error getting location:", error);
+              resolve(null); // Resolve with null if there's an error
+            }
+          );
+        } else {
+          console.error("Geolocation is not supported by this browser.");
+          resolve(null);
+        }
+      }
+    );
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Get user's location before submitting the login form
+    const location = await getUserLocation();
+    if (!location) {
+      setMessage("Could not retrieve location. Please try again.");
+      return;
+    }
+
     try {
-      const res = await axios.post(
-        "https://midwife-backend.vercel.app/api/v1/login",
-        formData
-      );
+      const res = await axios.post("http://localhost:5000/api/v1/login", {
+        ...formData,
+        latitude: location.latitude,
+        longitude: location.longitude,
+      });
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
       localStorage.setItem("isVerified", res.data.isVerified);
 
       if (res.data.role === "admin") {
-        navigate("/dashboard"); // Super admin can access dashboard
+        navigate("/dashboard"); // Super admin navigates to dashboard
       } else if (!res.data.isVerified) {
-        navigate("/not-verified"); // Unverified user goes to home page
+        navigate("/not-verified"); // Unverified user
       } else {
-        navigate("/profile"); // Verified user goes to their profile
+        navigate("/profile"); // Verified user navigates to profile
       }
     } catch (err) {
       setMessage(

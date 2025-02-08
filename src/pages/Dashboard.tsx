@@ -10,7 +10,8 @@ const Dashboard = () => {
     location: string;
     mobileNumber: string;
     isVerified: boolean;
-    role: string; // To differentiate admin from users
+    isBlocked?: boolean; // New field for blocked users
+    role: string;
   }
 
   const [users, setUsers] = useState<User[]>([]);
@@ -26,14 +27,11 @@ const Dashboard = () => {
         );
         const allUsers: User[] = res.data.users || [];
 
-        // Find admin from the list
         const adminUser =
           allUsers.find((user) => user.role === "admin") || null;
         setAdmin(adminUser);
 
-        // Filter out users (exclude admins)
-        const filteredUsers = allUsers.filter((user) => user.role !== "admin");
-        setUsers(filteredUsers);
+        setUsers(allUsers.filter((user) => user.role !== "admin"));
 
         setLoading(false);
       } catch (error) {
@@ -51,8 +49,8 @@ const Dashboard = () => {
       await axios.patch(
         `https://midwife-backend.vercel.app/api/v1/admin/verify-user/${email}`
       );
-      setUsers(
-        users.map((user) =>
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
           user.email === email ? { ...user, isVerified: true } : user
         )
       );
@@ -60,6 +58,25 @@ const Dashboard = () => {
       console.error("Error verifying user:", error);
     }
   };
+
+  const declineUser = (email: string) => {
+    setUsers((prevUsers) => prevUsers.filter((user) => user.email !== email));
+  };
+
+  const toggleBlockUser = (email: string) => {
+    setUsers((prevUsers) =>
+      prevUsers.map((user) =>
+        user.email === email ? { ...user, isBlocked: !user.isBlocked } : user
+      )
+    );
+  };
+
+  const deleteUser = (email: string) => {
+    setUsers((prevUsers) => prevUsers.filter((user) => user.email !== email));
+  };
+
+  const pendingUsers = users.filter((user) => !user.isVerified);
+  const verifiedUsers = users.filter((user) => user.isVerified);
 
   if (loading) return <p className="text-center text-gray-500">Loading...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
@@ -94,45 +111,83 @@ const Dashboard = () => {
           )}
         </div>
 
-        {/* Users Table */}
+        {/* Pending Users Table */}
+        <h3 className="mb-2 text-lg font-semibold text-gray-800">
+          Pending Users
+        </h3>
+        <div className="overflow-x-auto mb-6">
+          <table className="w-full border-collapse overflow-hidden rounded-lg shadow-md">
+            <thead className="bg-yellow-500 text-white">
+              <tr>
+                <th className="px-4 py-3 text-left">Name</th>
+                <th className="px-4 py-3 text-left">Email</th>
+                <th className="px-4 py-3 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pendingUsers.map((user) => (
+                <tr key={user.email} className="border-b bg-white">
+                  <td className="px-4 py-3">{user.name}</td>
+                  <td className="px-4 py-3">{user.email}</td>
+                  <td className="px-4 py-3 text-center">
+                    <button
+                      onClick={() => verifyUser(user.email)}
+                      className="mr-2 rounded bg-green-500 px-3 py-1 text-white hover:bg-green-600"
+                    >
+                      Verify
+                    </button>
+                    <button
+                      onClick={() => declineUser(user.email)}
+                      className="rounded bg-red-500 px-3 py-1 text-white hover:bg-red-600"
+                    >
+                      Decline
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Verified Users Table */}
+        <h3 className="mb-2 text-lg font-semibold text-gray-800">
+          Verified Users
+        </h3>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse overflow-hidden rounded-lg shadow-md">
             <thead className="bg-blue-500 text-white">
               <tr>
                 <th className="px-4 py-3 text-left">Name</th>
                 <th className="px-4 py-3 text-left">Email</th>
-                <th className="px-4 py-3 text-left">Institution</th>
-                <th className="px-4 py-3 text-left">Location</th>
-                <th className="px-4 py-3 text-left">Mobile Number</th>
-                <th className="px-4 py-3 text-center">Status</th>
+                <th className="px-4 py-3 text-left">Status</th>
                 <th className="px-4 py-3 text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {users.map((user, index) => (
-                <tr
-                  key={user.email}
-                  className={`${
-                    index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                  } border-b`}
-                >
+              {verifiedUsers.map((user) => (
+                <tr key={user.email} className="border-b bg-white">
                   <td className="px-4 py-3">{user.name}</td>
                   <td className="px-4 py-3">{user.email}</td>
-                  <td className="px-4 py-3">{user.institution}</td>
-                  <td className="px-4 py-3">{user.location}</td>
-                  <td className="px-4 py-3">{user.mobileNumber}</td>
                   <td className="px-4 py-3 text-center">
-                    {user.isVerified ? "✅ Verified" : "⏳ Pending"}
+                    {user.isBlocked ? "⛔ Blocked" : "✅ Active"}
                   </td>
                   <td className="px-4 py-3 text-center">
-                    {!user.isVerified && (
-                      <button
-                        onClick={() => verifyUser(user.email)}
-                        className="rounded bg-green-500 px-3 py-1 text-white hover:bg-green-600"
-                      >
-                        Verify
-                      </button>
-                    )}
+                    <button
+                      onClick={() => toggleBlockUser(user.email)}
+                      className={`mr-2 rounded px-3 py-1 text-white ${
+                        user.isBlocked
+                          ? "bg-yellow-500 hover:bg-yellow-600"
+                          : "bg-gray-500 hover:bg-gray-600"
+                      }`}
+                    >
+                      {user.isBlocked ? "Unblock" : "Block"}
+                    </button>
+                    <button
+                      onClick={() => deleteUser(user.email)}
+                      className="rounded bg-red-500 px-3 py-1 text-white hover:bg-red-600"
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}

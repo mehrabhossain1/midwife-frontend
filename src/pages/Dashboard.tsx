@@ -7,7 +7,10 @@ const Dashboard = () => {
     name: string;
     email: string;
     institution: string;
-    location: string;
+    location: {
+      lat: number;
+      lng: number;
+    };
     mobileNumber: string;
     isVerified: boolean;
     isBlocked?: boolean; // New field for blocked users
@@ -142,6 +145,16 @@ const Dashboard = () => {
                     >
                       Decline
                     </button>
+                  </td>
+                  <td className="px-4 py-3">
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${user.location.lat},${user.location.lng}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 underline hover:text-blue-700"
+                    >
+                      View Location
+                    </a>
                   </td>
                 </tr>
               ))}

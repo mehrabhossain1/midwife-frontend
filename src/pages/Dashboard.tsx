@@ -2,21 +2,20 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
+export interface User {
+  name: string;
+  email: string;
+  institution: string;
+  location: {
+    lat: number;
+    lng: number;
+  };
+  mobileNumber: string;
+  isVerified: boolean;
+  isBlocked?: boolean; // New field for blocked users
+  role: string;
+}
 const Dashboard = () => {
-  interface User {
-    name: string;
-    email: string;
-    institution: string;
-    location: {
-      lat: number;
-      lng: number;
-    };
-    mobileNumber: string;
-    isVerified: boolean;
-    isBlocked?: boolean; // New field for blocked users
-    role: string;
-  }
-
   const [users, setUsers] = useState<User[]>([]);
   const [admin, setAdmin] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);

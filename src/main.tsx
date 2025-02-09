@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard.tsx";
 import NotVerified from "./pages/NotVerified.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Profile from "./pages/Profile.tsx";
+import ReportForm from "./components/ReportForm.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -17,6 +18,7 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/" element={<App />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/report" element={<ReportForm />} />
         <Route path="/not-verified" element={<NotVerified />} />
 
         {/* Restrict dashboard to only super admin */}

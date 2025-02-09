@@ -43,7 +43,7 @@ const Register = () => {
       const updatedData = { ...data, location };
 
       const res = await axios.post(
-        "https://midwife-backend.vercel.app/api/v1/register",
+        "http://localhost:5000/api/v1/register",
         updatedData
       );
       setMessage(res.data.message);

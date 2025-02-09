@@ -202,6 +202,17 @@ const Dashboard = () => {
                       Delete
                     </button>
                   </td>
+
+                  <td className="px-4 py-3">
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${user.location.lat},${user.location.lng}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 underline hover:text-blue-700"
+                    >
+                      View Location
+                    </a>
+                  </td>
                 </tr>
               ))}
             </tbody>

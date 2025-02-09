@@ -47,11 +47,14 @@ const Login = () => {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/v1/login", {
-        ...formData,
-        latitude: location.latitude,
-        longitude: location.longitude,
-      });
+      const res = await axios.post(
+        "https://midwife-backend.vercel.app/api/v1/login",
+        {
+          ...formData,
+          latitude: location.latitude,
+          longitude: location.longitude,
+        }
+      );
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);

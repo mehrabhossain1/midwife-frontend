@@ -1,30 +1,50 @@
-import { useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const Register = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    location: "",
-    institution: "",
-    mobileNumber: "",
-  });
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  // Get current location using browser geolocation API
+  const getCurrentLocation = () => {
+    return new Promise<{ lat: number; lng: number }>((resolve, reject) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            resolve({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            });
+          },
+          (error) => {
+            reject(error);
+          }
+        );
+      } else {
+        reject("Geolocation not available");
+      }
+    });
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  // Update onSubmit function to include the location object
+  const onSubmit = async (data: any) => {
     try {
+      const location = await getCurrentLocation();
+      // Now, `location` is an object with lat and lng
+      const updatedData = { ...data, location };
+
       const res = await axios.post(
         "http://localhost:5000/api/v1/register",
-        formData
+        updatedData
       );
       setMessage(res.data.message);
       navigate("/login"); // Redirect to login after successful registration
@@ -43,63 +63,126 @@ const Register = () => {
         <h2 className="mb-6 text-center text-2xl font-semibold text-gray-800">
           Register
         </h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* Name */}
           <input
             type="text"
-            name="name"
             placeholder="Name"
-            onChange={handleChange}
-            required
+            {...register("name", {
+              required: "Name is required",
+              pattern: {
+                value: /^[a-zA-Z.-]+$/,
+                message: "Name should contain only letters, period, and hyphen",
+              },
+            })}
             className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
           />
+          {errors.name?.message && (
+            <p className="text-red-600 text-sm">
+              {String(errors.name.message)}
+            </p>
+          )}
+
+          {/* Email */}
           <input
             type="email"
-            name="email"
             placeholder="Email"
-            onChange={handleChange}
-            required
+            {...register("email", {
+              required: "Email is required",
+              pattern: /^\S+@\S+$/i,
+            })}
             className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
           />
+          {errors.email && (
+            <p className="text-red-600 text-sm">
+              {String(errors.email.message)}
+            </p>
+          )}
+
+          {/* Password */}
           <input
             type="password"
-            name="password"
             placeholder="Password"
-            onChange={handleChange}
-            required
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 6,
+                message: "Password must be at least 6 characters long",
+              },
+            })}
             className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
           />
+          {errors.password && (
+            <p className="text-red-600 text-sm">
+              {String(errors.password.message)}
+            </p>
+          )}
+
+          {/* Confirm Password */}
           <input
             type="password"
-            name="confirmPassword"
             placeholder="Confirm Password"
-            onChange={handleChange}
-            required
+            {...register("confirmPassword", {
+              required: "Confirm password is required",
+              validate: (value) =>
+                value === watch("password") || "Passwords do not match",
+            })}
             className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
           />
+          {errors.confirmPassword && (
+            <p className="text-red-600 text-sm">
+              {String(errors.confirmPassword.message)}
+            </p>
+          )}
+
+          {/* Location */}
           <input
             type="text"
-            name="location"
             placeholder="Location"
-            onChange={handleChange}
-            required
+            {...register("location", { required: "Location is required" })}
             className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
           />
+          {errors.location?.message && (
+            <p className="text-red-600 text-sm">
+              {String(errors.location.message)}
+            </p>
+          )}
+
+          {/* Institution */}
           <input
             type="text"
-            name="institution"
             placeholder="Institution"
-            onChange={handleChange}
-            required
+            {...register("institution", {
+              required: "Institution is required",
+            })}
             className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
           />
+          {errors.institution && (
+            <p className="text-red-600 text-sm">
+              {String(errors.institution.message)}
+            </p>
+          )}
+
+          {/* Mobile Number */}
           <input
             type="text"
-            name="mobileNumber"
             placeholder="Mobile Number"
-            onChange={handleChange}
-            required
+            {...register("mobileNumber", {
+              required: "Mobile number is required",
+              pattern: {
+                value: /^\d{11}$/,
+                message: "Mobile number must be 11 digits",
+              },
+            })}
             className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
           />
+          {errors.mobileNumber && (
+            <p className="text-red-600 text-sm">
+              {String(errors.mobileNumber.message)}
+            </p>
+          )}
+
+          {/* Submit Button */}
           <button
             type="submit"
             className="w-full rounded-lg bg-blue-500 px-6 py-3 text-lg font-semibold text-white transition-all duration-300 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -118,3 +201,4 @@ const Register = () => {
 };
 
 export default Register;
+// Removed the unnecessary watch function definition

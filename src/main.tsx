@@ -10,9 +10,11 @@ import NotVerified from "./pages/NotVerified.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Profile from "./pages/Profile.tsx";
 import ReportForm from "./components/ReportForm.tsx";
+import { Toaster } from "sonner";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
+    <Toaster />
     <Router>
       <Routes>
         <Route path="/" element={<App />} />

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { toast } from "sonner";
 
 export interface User {
   name: string;
@@ -57,6 +58,7 @@ const Dashboard = () => {
           user.email === email ? { ...user, isVerified: true } : user
         )
       );
+      toast.success("User verified successfully!");
     } catch (error) {
       console.error("Error verifying user:", error);
     }
@@ -75,6 +77,7 @@ const Dashboard = () => {
         setUsers((prevUsers) =>
           prevUsers.filter((user) => user.email !== email)
         );
+        toast.success("User declined successfully!");
       } else {
         console.error("Failed to decline user:", response.data.message);
       }
@@ -89,6 +92,7 @@ const Dashboard = () => {
         user.email === email ? { ...user, isBlocked: !user.isBlocked } : user
       )
     );
+    toast.success("User blocked successfully!");
   };
 
   const deleteUser = async (email: string) => {
@@ -104,6 +108,7 @@ const Dashboard = () => {
         setUsers((prevUsers) =>
           prevUsers.filter((user) => user.email !== email)
         );
+        toast.success("User deleted successfully!");
       } else {
         console.error("Failed to delete user:", response.data.message);
       }

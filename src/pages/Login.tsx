@@ -2,6 +2,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -55,6 +56,7 @@ const Login = () => {
           longitude: location.longitude,
         }
       );
+      toast.success("Login successful!");
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);

@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const Register = () => {
   const {
@@ -46,6 +47,7 @@ const Register = () => {
         "https://midwife-backend.vercel.app/api/v1/register",
         updatedData
       );
+      toast.success("Registration successful!");
       setMessage(res.data.message);
       navigate("/login"); // Redirect to login after successful registration
     } catch (err) {

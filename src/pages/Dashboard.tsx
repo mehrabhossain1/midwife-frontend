@@ -11,6 +11,7 @@ export interface User {
     lng: number;
   };
   mobileNumber: string;
+  designation: string;
   isVerified: boolean;
   isBlocked?: boolean; // New field for blocked users
   role: string;
@@ -61,8 +62,25 @@ const Dashboard = () => {
     }
   };
 
-  const declineUser = (email: string) => {
-    setUsers((prevUsers) => prevUsers.filter((user) => user.email !== email));
+  const declineUser = async (email: string) => {
+    try {
+      const response = await axios.delete(
+        `https://midwife-backend.vercel.app/api/v1/admin/users`,
+        {
+          data: { email },
+        }
+      );
+
+      if (response.data.success) {
+        setUsers((prevUsers) =>
+          prevUsers.filter((user) => user.email !== email)
+        );
+      } else {
+        console.error("Failed to decline user:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error declining user:", error);
+    }
   };
 
   const toggleBlockUser = (email: string) => {
@@ -73,8 +91,25 @@ const Dashboard = () => {
     );
   };
 
-  const deleteUser = (email: string) => {
-    setUsers((prevUsers) => prevUsers.filter((user) => user.email !== email));
+  const deleteUser = async (email: string) => {
+    try {
+      const response = await axios.delete(
+        `https://midwife-backend.vercel.app/api/v1/admin/users`,
+        {
+          data: { email },
+        }
+      );
+
+      if (response.data.success) {
+        setUsers((prevUsers) =>
+          prevUsers.filter((user) => user.email !== email)
+        );
+      } else {
+        console.error("Failed to delete user:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
   };
 
   const pendingUsers = users.filter((user) => !user.isVerified);
@@ -125,6 +160,7 @@ const Dashboard = () => {
                 <th className="px-4 py-3 text-left">Email</th>
                 <th className="px-4 py-3 text-left">Mobile</th>
                 <th className="px-4 py-3 text-left">Designation</th>
+                <th className="px-4 py-3 text-left">Location</th>
                 <th className="px-4 py-3 text-left">Actions</th>
               </tr>
             </thead>
@@ -134,21 +170,7 @@ const Dashboard = () => {
                   <td className="px-4 py-3">{user.name}</td>
                   <td className="px-4 py-3">{user.email}</td>
                   <td className="px-4 py-3">{user.mobileNumber}</td>
-                  <td className="px-4 py-3">{user.mobileNumber}</td>
-                  <td className="px-4 py-3 text-center">
-                    <button
-                      onClick={() => verifyUser(user.email)}
-                      className="mr-2 rounded bg-green-500 px-3 py-1 text-white hover:bg-green-600"
-                    >
-                      Verify
-                    </button>
-                    <button
-                      onClick={() => declineUser(user.email)}
-                      className="rounded bg-red-500 px-3 py-1 text-white hover:bg-red-600"
-                    >
-                      Decline
-                    </button>
-                  </td>
+                  <td className="px-4 py-3">{user?.designation}</td>
                   <td className="px-4 py-3">
                     <a
                       href={`https://www.google.com/maps/search/?api=1&query=${user.location.lat},${user.location.lng}`}
@@ -158,6 +180,20 @@ const Dashboard = () => {
                     >
                       View Location
                     </a>
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <button
+                      onClick={() => verifyUser(user.email)}
+                      className="mr-2 rounded bg-green-500 px-3 py-1 text-white hover:bg-green-600"
+                    >
+                      Approve
+                    </button>
+                    <button
+                      onClick={() => declineUser(user.email)}
+                      className="rounded bg-red-500 px-3 py-1 text-white hover:bg-red-600"
+                    >
+                      Decline
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -176,6 +212,7 @@ const Dashboard = () => {
                 <th className="px-4 py-3 text-left">Name</th>
                 <th className="px-4 py-3 text-left">Email</th>
                 <th className="px-4 py-3 text-left">Status</th>
+                <th className="px-4 py-3 text-left">Location</th>
                 <th className="px-4 py-3 text-center">Actions</th>
               </tr>
             </thead>
@@ -187,25 +224,6 @@ const Dashboard = () => {
                   <td className="px-4 py-3 text-center">
                     {user.isBlocked ? "⛔ Blocked" : "✅ Active"}
                   </td>
-                  <td className="px-4 py-3 text-center">
-                    <button
-                      onClick={() => toggleBlockUser(user.email)}
-                      className={`mr-2 rounded px-3 py-1 text-white ${
-                        user.isBlocked
-                          ? "bg-yellow-500 hover:bg-yellow-600"
-                          : "bg-gray-500 hover:bg-gray-600"
-                      }`}
-                    >
-                      {user.isBlocked ? "Unblock" : "Block"}
-                    </button>
-                    <button
-                      onClick={() => deleteUser(user.email)}
-                      className="rounded bg-red-500 px-3 py-1 text-white hover:bg-red-600"
-                    >
-                      Delete
-                    </button>
-                  </td>
-
                   <td className="px-4 py-3">
                     <a
                       href={`https://www.google.com/maps/search/?api=1&query=${user.location.lat},${user.location.lng}`}
@@ -215,6 +233,24 @@ const Dashboard = () => {
                     >
                       View Location
                     </a>
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <button
+                      onClick={() => toggleBlockUser(user.email)}
+                      className={`mr-2 rounded px-3 py-1 text-white ${
+                        user.isBlocked
+                          ? "bg-yellow-500 hover:bg-yellow-600"
+                          : "bg-gray-500 hover:bg-gray-600"
+                      }`}
+                    >
+                      {user.isBlocked ? "Unblock" : "Hold"}
+                    </button>
+                    <button
+                      onClick={() => deleteUser(user.email)}
+                      className="rounded bg-red-500 px-3 py-1 text-white hover:bg-red-600"
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}

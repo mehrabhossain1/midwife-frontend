@@ -91,10 +91,13 @@ const Dashboard = () => {
     isCurrentlyBlocked: boolean
   ) => {
     try {
-      const response = await axios.patch(`/api/v1/admin/block-user/${email}`, {
-        isBlocked: !isCurrentlyBlocked,
-        isVerified: !isCurrentlyBlocked, // If blocking, set isVerified to false
-      });
+      const response = await axios.patch(
+        `https://midwife-backend.vercel.app/api/v1/admin/block-user/${email}`,
+        {
+          isBlocked: !isCurrentlyBlocked,
+          isVerified: !isCurrentlyBlocked, // If blocking, set isVerified to false
+        }
+      );
 
       if (response.data.success) {
         setUsers((prevUsers) =>

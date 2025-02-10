@@ -91,13 +91,10 @@ const Dashboard = () => {
     isCurrentlyBlocked: boolean
   ) => {
     try {
-      const response = await axios.patch(
-        `https://midwife-backend.vercel.app/api/v1/admin/block-user/${email}`,
-        {
-          isBlocked: !isCurrentlyBlocked,
-          isVerified: !isCurrentlyBlocked, // If blocking, set isVerified to false
-        }
-      );
+      const response = await axios.patch(`/api/v1/admin/block-user/${email}`, {
+        isBlocked: !isCurrentlyBlocked,
+        isVerified: !isCurrentlyBlocked, // If blocking, set isVerified to false
+      });
 
       if (response.data.success) {
         setUsers((prevUsers) =>
@@ -111,6 +108,17 @@ const Dashboard = () => {
               : user
           )
         );
+
+        // 🔥 If the blocked user is currently logged in, log them out
+        const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+        if (storedUser.email === email && !isCurrentlyBlocked) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("role");
+          localStorage.removeItem("isVerified");
+          localStorage.removeItem("isBlocked");
+          window.location.href = "/login"; // Redirect to login
+        }
+
         toast.success(
           !isCurrentlyBlocked ? "User put on hold!" : "User unblocked!"
         );

@@ -43,7 +43,7 @@ const Register = () => {
       const updatedData = { ...data, location };
 
       const res = await axios.post(
-        "http://localhost:5000/api/v1/register",
+        "https://midwife-backend.vercel.app/api/v1/register",
         updatedData
       );
       setMessage(res.data.message);
@@ -70,10 +70,6 @@ const Register = () => {
             placeholder="Name"
             {...register("name", {
               required: "Name is required",
-              pattern: {
-                value: /^[a-zA-Z.-]+$/,
-                message: "Name should contain only letters, period, and hyphen",
-              },
             })}
             className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
           />
@@ -134,7 +130,20 @@ const Register = () => {
               {String(errors.confirmPassword.message)}
             </p>
           )}
-
+          {/* Designation */}
+          <input
+            type="text"
+            placeholder="Designation"
+            {...register("designation", {
+              required: "Designation is required",
+            })}
+            className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
+          />
+          {errors.designation && (
+            <p className="text-red-600 text-sm">
+              {String(errors.designation.message)}
+            </p>
+          )}
           {/* Location */}
           <input
             type="text"

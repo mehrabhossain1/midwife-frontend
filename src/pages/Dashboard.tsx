@@ -123,6 +123,8 @@ const Dashboard = () => {
               <tr>
                 <th className="px-4 py-3 text-left">Name</th>
                 <th className="px-4 py-3 text-left">Email</th>
+                <th className="px-4 py-3 text-left">Mobile</th>
+                <th className="px-4 py-3 text-left">Designation</th>
                 <th className="px-4 py-3 text-left">Actions</th>
               </tr>
             </thead>
@@ -131,6 +133,8 @@ const Dashboard = () => {
                 <tr key={user.email} className="border-b bg-white">
                   <td className="px-4 py-3">{user.name}</td>
                   <td className="px-4 py-3">{user.email}</td>
+                  <td className="px-4 py-3">{user.mobileNumber}</td>
+                  <td className="px-4 py-3">{user.mobileNumber}</td>
                   <td className="px-4 py-3 text-center">
                     <button
                       onClick={() => verifyUser(user.email)}

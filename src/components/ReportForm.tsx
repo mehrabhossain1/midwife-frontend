@@ -99,9 +99,112 @@ const ReportForm = () => {
             render={({ field }) => (
               <select {...field} className="w-full p-2 border rounded">
                 <option value="">Select a cause</option>
-                <option value="Medical Emergency">Medical Emergency</option>
-                <option value="Financial Help">Financial Help</option>
-                <option value="Food Assistance">Food Assistance</option>
+                <option
+                  className="text-red-500"
+                  value="তীব্র পেটে ব্যথা বা খিঁচুনি"
+                >
+                  তীব্র পেটে ব্যথা বা খিঁচুনি
+                </option>
+                <option
+                  className="text-red-500"
+                  value="প্রচণ্ড রক্তপাত বা রক্ত ​​জমাট বাঁধা"
+                >
+                  প্রচণ্ড রক্তপাত বা রক্ত জমাট বাঁধা
+                </option>
+                <option
+                  className="text-red-500"
+                  value="তীব্র মাথাব্যথা বা ঝাপসা দৃষ্টি"
+                >
+                  তীব্র মাথাব্যথা বা ঝাপসা দৃষ্টি
+                </option>
+                <option
+                  className="text-red-500"
+                  value="নিরন্তর বমি এবং পানিশূন্যতা"
+                >
+                  নিরন্তর বমি এবং পানিশূন্যতা
+                </option>
+                <option
+                  className="text-red-500"
+                  value="ভ্রূণের নড়াচড়া কমে যাওয়া বা একেবারেই না থাকা (২৪ সপ্তাহ পরে)"
+                >
+                  ভ্রূণের নড়াচড়া কমে যাওয়া বা একেবারেই না থাকা (২৪ সপ্তাহ
+                  পরে)
+                </option>
+                <option
+                  className="text-red-500"
+                  value="হাত, মুখ বা পায়ে তীব্র ফোলাভাব"
+                >
+                  হাত, মুখ বা পায়ে তীব্র ফোলাভাব
+                </option>
+                <option
+                  className="text-red-500"
+                  value="ঠান্ডা লাগার সাথে উচ্চ জ্বর"
+                >
+                  ঠান্ডা লাগার সাথে উচ্চ জ্বর
+                </option>
+                <option
+                  className="text-red-500"
+                  value="বেদনাদায়ক বা জ্বালাপোড়া প্রস্রাব"
+                >
+                  বেদনাদায়ক বা জ্বালাপোড়া প্রস্রাব
+                </option>
+                <option
+                  className="text-red-500"
+                  value="৩৭ সপ্তাহের আগে হঠাৎ তরল পদার্থ বের হয়ে আসা"
+                >
+                  ৩৭ সপ্তাহের আগে হঠাৎ তরল পদার্থ বের হয়ে আসা
+                </option>
+                <option
+                  className="text-red-500"
+                  value="শ্বাসকষ্ট বা বুকে ব্যথা"
+                >
+                  শ্বাসকষ্ট বা বুকে ব্যথা
+                </option>
+                <option
+                  className="text-yellow-700"
+                  value="হালকা বমি বমি ভাব এবং বমি"
+                >
+                  হালকা বমি বমি ভাব এবং বমি
+                </option>
+                <option
+                  className="text-yellow-700"
+                  value="ক্লান্তি এবং মাথা ঘোরা"
+                >
+                  ক্লান্তি এবং মাথা ঘোরা
+                </option>
+                <option
+                  className="text-yellow-700"
+                  value="পা বা হাত হালকা ফোলা"
+                >
+                  পা বা হাত হালকা ফোলা
+                </option>
+                <option
+                  className="text-yellow-700"
+                  value="কোষ্ঠকাঠিন্য এবং ফুলে যাওয়া"
+                >
+                  কোষ্ঠকাঠিন্য এবং ফুলে যাওয়া
+                </option>
+                <option className="text-yellow-700" value="পিঠে ব্যথা">
+                  পিঠে ব্যথা
+                </option>
+                <option className="text-yellow-700" value="হালকা খিঁচুনি">
+                  হালকা খিঁচুনি
+                </option>
+                <option className="text-yellow-700" value="ঘন ঘন প্রস্রাব">
+                  ঘন ঘন প্রস্রাব
+                </option>
+                <option className="text-yellow-700" value="অম্বল এবং বদহজম">
+                  অম্বল এবং বদহজম
+                </option>
+                <option
+                  className="text-yellow-700"
+                  value="মেজাজ ঘোরা এবং জ্বালাপোড়া"
+                >
+                  মেজাজ ঘোরা এবং জ্বালাপোড়া
+                </option>
+                <option className="text-yellow-700" value="স্তনে কোমলতা">
+                  স্তনে কোমলতা
+                </option>
                 <option value="Other">Other</option>
               </select>
             )}

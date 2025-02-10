@@ -86,13 +86,41 @@ const Dashboard = () => {
     }
   };
 
-  const toggleBlockUser = (email: string) => {
-    setUsers((prevUsers) =>
-      prevUsers.map((user) =>
-        user.email === email ? { ...user, isBlocked: !user.isBlocked } : user
-      )
-    );
-    toast.success("User blocked successfully!");
+  const toggleBlockUser = async (
+    email: string,
+    isCurrentlyBlocked: boolean
+  ) => {
+    try {
+      const response = await axios.patch(
+        `https://midwife-backend.vercel.app/api/v1/admin/block-user/${email}`,
+        {
+          isBlocked: !isCurrentlyBlocked,
+          isVerified: !isCurrentlyBlocked, // If blocking, set isVerified to false
+        }
+      );
+
+      if (response.data.success) {
+        setUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user.email === email
+              ? {
+                  ...user,
+                  isBlocked: !isCurrentlyBlocked,
+                  isVerified: !isCurrentlyBlocked,
+                }
+              : user
+          )
+        );
+        toast.success(
+          !isCurrentlyBlocked ? "User put on hold!" : "User unblocked!"
+        );
+      } else {
+        toast.error("Failed to update user status!");
+      }
+    } catch (error) {
+      console.error("Error updating user block status:", error);
+      toast.error("Something went wrong!");
+    }
   };
 
   const deleteUser = async (email: string) => {
@@ -241,7 +269,9 @@ const Dashboard = () => {
                   </td>
                   <td className="px-4 py-3 text-center">
                     <button
-                      onClick={() => toggleBlockUser(user.email)}
+                      onClick={() =>
+                        toggleBlockUser(user.email, user.isBlocked ?? false)
+                      }
                       className={`mr-2 rounded px-3 py-1 text-white ${
                         user.isBlocked
                           ? "bg-yellow-500 hover:bg-yellow-600"

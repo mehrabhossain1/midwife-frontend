@@ -1,44 +1,50 @@
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import type { LatLngTuple } from "leaflet";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { useEffect, useState } from "react";
 
-interface User {
-  name: string;
-  email: string;
-  institution: string;
-  location: {
-    lat: number;
-    lng: number;
-  };
-}
+// Dummy User Data
+const userData = [
+  {
+    id: 1,
+    name: "John Doe",
+    location: { lat: 51.505, lng: -0.09 },
+  },
+  {
+    id: 2,
+    name: "Jane Smith",
+    location: { lat: 54.505, lng: -0.09 },
+  },
+  {
+    id: 3,
+    name: "Alice Johnson",
+    location: { lat: 52.505, lng: -0.09 },
+  },
+];
 
-interface UserMapProps {
-  users: User[];
-}
+// Default map position (centered around the first user)
+const defaultPosition: LatLngTuple = [51.505, -0.09];
 
-export default function UserMap({ users }: UserMapProps) {
-  const [mapLoaded, setMapLoaded] = useState(false);
-
-  useEffect(() => {
-    setMapLoaded(true); // Ensure map initializes only once
-  }, []);
-
-  if (!mapLoaded) return <p>Loading Map...</p>;
-
+export default function UserMap() {
   return (
     <MapContainer
-      center={[23.8103, 90.4125]} // Default center (Dhaka, Bangladesh)
+      center={defaultPosition}
       zoom={6}
+      scrollWheelZoom={true}
       style={{ height: "500px", width: "100%" }}
     >
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      {/* Tile Layer */}
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
 
-      {users.map((user, index) => (
-        <Marker key={index} position={[user.location.lat, user.location.lng]}>
+      {/* Map over users and add markers */}
+      {userData.map((user) => (
+        <Marker key={user.id} position={[user.location.lat, user.location.lng]}>
           <Popup>
             <strong>{user.name}</strong> <br />
-            {user.email} <br />
-            {user.institution}
+            Latitude: {user.location.lat} <br />
+            Longitude: {user.location.lng}
           </Popup>
         </Marker>
       ))}

@@ -79,7 +79,7 @@ function App() {
           </button>
         </Link>
 
-        <UserMap users={last30MinutesUsers} />
+        <UserMap />
 
         {/* Footer */}
         <footer className="mt-8 text-sm text-gray-600 text-center">

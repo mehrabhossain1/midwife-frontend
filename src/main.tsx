@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+// import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
@@ -13,7 +13,8 @@ import ReportForm from "./components/ReportForm.tsx";
 import { Toaster } from "sonner";
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
+  // <StrictMode>
+  <>
     <Toaster />
     <Router>
       <Routes>
@@ -44,5 +45,6 @@ createRoot(document.getElementById("root")!).render(
         />
       </Routes>
     </Router>
-  </StrictMode>
+    {/* </StrictMode> */}
+  </>
 );

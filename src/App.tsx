@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { User } from "./pages/Dashboard";
 import axios from "axios";
 import Logo from "../public/logo.jpg";
+import UserMap from "./components/UserMap";
 
 function App() {
   const [last30MinutesUsers, setLast30MinutesUsers] = useState<User[]>([]);
@@ -23,6 +24,7 @@ function App() {
 
     fetchRecentUsers();
   }, []);
+
   return (
     <div className="min-h-screen">
       <div className="space-x-2 flex">
@@ -76,6 +78,8 @@ function App() {
             রিপোর্ট করুন →
           </button>
         </Link>
+
+        <UserMap users={last30MinutesUsers} />
 
         {/* Footer */}
         <footer className="mt-8 text-sm text-gray-600 text-center">

@@ -177,7 +177,7 @@ const Dashboard = () => {
         const res = await axios.get(
           "https://midwife-backend.vercel.app/api/v1/reports"
         );
-        setReports(res.data.reports || []);
+        setReports(res.data.allReports || []);
       } catch (error) {
         console.error("Error fetching reports:", error);
       }

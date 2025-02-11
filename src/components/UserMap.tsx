@@ -6,7 +6,7 @@ import { Report } from "../pages/Dashboard";
 
 // Define a type for the report if not already defined
 
-const defaultPosition: LatLngTuple = [51.505, -0.09];
+const defaultPosition: LatLngTuple = [23.8103, 90.4125];
 
 export default function UserMap() {
   const [reportedUsers, setReportedUsers] = useState<Report[]>([]);

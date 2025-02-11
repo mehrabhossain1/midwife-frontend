@@ -1,31 +1,37 @@
 import type { LatLngTuple } from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { useEffect, useState } from "react";
+import { Report } from "../pages/Dashboard";
 
-// Dummy User Data
-const userData = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "5o7H9@example.com",
-    location: { lat: 51.505, lng: -0.09 },
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    location: { lat: 54.505, lng: -0.09 },
-  },
-  {
-    id: 3,
-    name: "Alice Johnson",
-    location: { lat: 52.505, lng: -0.09 },
-  },
-];
+// Define a type for the report if not already defined
 
-// Default map position (centered around the first user)
 const defaultPosition: LatLngTuple = [51.505, -0.09];
 
 export default function UserMap() {
+  const [reportedUsers, setReportedUsers] = useState<Report[]>([]);
+
+  // Fetch reports from the API
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/v1/reports");
+        const data = await response.json();
+
+        if (data.success) {
+          // Assuming the report data contains a location with lat/lng
+          setReportedUsers(data.allReports); // Store the fetched reports
+        } else {
+          console.error("Failed to fetch reports");
+        }
+      } catch (err) {
+        console.error("Error fetching reports:", err);
+      }
+    };
+
+    fetchReports();
+  }, []);
+
   return (
     <MapContainer
       center={defaultPosition}
@@ -39,15 +45,18 @@ export default function UserMap() {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      {/* Map over users and add markers */}
-      {userData.map((user) => (
-        <Marker key={user.id} position={[user.location.lat, user.location.lng]}>
+      {/* Map over reported users and add markers */}
+      {reportedUsers.map((report) => (
+        <Marker
+          key={report._id}
+          position={[report.location.lat, report.location.lng]}
+        >
           <Popup>
-            <strong>{user.name}</strong> <br />
-            Latitude: {user.location.lat} <br />
-            Longitude: {user.location.lng}
-            <br />
-            Email : {user.email}
+            <strong>{report.name}</strong> <br />
+            Latitude: {report.location.lat} <br />
+            Longitude: {report.location.lng} <br />
+            Email: {report.mobileNumber} <br />
+            Report: {report.cause}
           </Popup>
         </Marker>
       ))}

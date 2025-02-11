@@ -1,6 +1,10 @@
+import UserMap from "../components/UserMap";
+
 const Profile = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-green-50 py-6 px-4">
+      <UserMap />
+
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md text-center">
         <h2 className="text-4xl font-semibold text-green-600">
           Congratulations!

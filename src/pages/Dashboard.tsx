@@ -28,6 +28,7 @@ export interface Report {
     lng: number;
   };
   createdAt: string;
+  isSolved: boolean;
 }
 
 const Dashboard = () => {

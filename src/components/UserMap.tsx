@@ -7,6 +7,7 @@ const userData = [
   {
     id: 1,
     name: "John Doe",
+    email: "5o7H9@example.com",
     location: { lat: 51.505, lng: -0.09 },
   },
   {
@@ -45,6 +46,8 @@ export default function UserMap() {
             <strong>{user.name}</strong> <br />
             Latitude: {user.location.lat} <br />
             Longitude: {user.location.lng}
+            <br />
+            Email : {user.email}
           </Popup>
         </Marker>
       ))}

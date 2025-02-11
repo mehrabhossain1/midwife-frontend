@@ -1,27 +1,27 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { User } from "./pages/Dashboard";
+import { Report } from "./pages/Dashboard";
 import axios from "axios";
 import Logo from "../public/logo.jpg";
 
 function App() {
-  const [last30MinutesUsers, setLast30MinutesUsers] = useState<User[]>([]);
-  const [last24HoursUsers, setLast24HoursUsers] = useState<User[]>([]);
+  const [last24HoursReports, setLast24HoursReports] = useState<Report[]>([]);
+  const [allReportsCount, setAllReportsCount] = useState(0);
+  // console.log(allReportsCount);
+
+  const fetchRecentReports = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/v1/reports");
+
+      setLast24HoursReports(res.data.last24HoursReports);
+      setAllReportsCount(res.data.allReportsCount);
+    } catch (error) {
+      console.error("Error fetching reports:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchRecentUsers = async () => {
-      try {
-        const res = await axios.get(
-          "http://localhost:5000/api/v1/admin/recent-users"
-        );
-        setLast30MinutesUsers(res.data.last30MinutesUsers);
-        setLast24HoursUsers(res.data.last24HoursUsers);
-      } catch (error) {
-        console.error("Error fetching recent users:", error);
-      }
-    };
-
-    fetchRecentUsers();
+    fetchRecentReports();
   }, []);
 
   return (
@@ -40,21 +40,19 @@ function App() {
           {/* 30 Minutes Report */}
           <div className="bg-green-100 p-4 rounded-md">
             <p className="text-4xl font-bold text-gray-900">
-              {last30MinutesUsers.length}
+              {last24HoursReports.length}
             </p>
             <p className="mt-2 text-green-700 font-medium">
-              গত ৩০ মিনিটে করা মোট রিপোর্ট
+              গত ২৪ ঘণ্টায় করা মোট রিপোর্ট
             </p>
           </div>
 
           {/* 24 Hours Report */}
           <div className="bg-blue-100 p-4 rounded-md">
             <p className="text-4xl font-bold text-gray-900">
-              {last24HoursUsers.length}
+              {allReportsCount}
             </p>
-            <p className="mt-2 text-blue-700 font-medium">
-              গত ২৪ ঘণ্টায় করা মোট রিপোর্ট
-            </p>
+            <p className="mt-2 text-blue-700 font-medium">মোট রিপোর্ট</p>
           </div>
         </div>
 

@@ -17,11 +17,26 @@ export interface User {
   isBlocked?: boolean; // New field for blocked users
   role: string;
 }
+export interface Report {
+  _id: string;
+  name: string;
+  mobileNumber: string;
+  address: string;
+  cause?: string;
+  location: {
+    lat: number;
+    lng: number;
+  };
+  createdAt: string;
+}
+
 const Dashboard = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [admin, setAdmin] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const [reports, setReports] = useState<Report[]>([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -155,6 +170,19 @@ const Dashboard = () => {
       console.error("Error deleting user:", error);
     }
   };
+
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/v1/reports");
+        setReports(res.data.reports || []);
+      } catch (error) {
+        console.error("Error fetching reports:", error);
+      }
+    };
+
+    fetchReports();
+  }, []);
 
   const pendingUsers = users.filter((user) => !user.isVerified);
   const verifiedUsers = users.filter((user) => user.isVerified);
@@ -300,6 +328,54 @@ const Dashboard = () => {
                   </td>
                 </tr>
               ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Reports Table */}
+        <h3 className="mb-2 text-lg font-semibold text-gray-800">Reports</h3>
+        <div className="overflow-x-auto mb-6">
+          <table className="w-full border-collapse overflow-hidden rounded-lg shadow-md">
+            <thead className="bg-red-500 text-white">
+              <tr>
+                <th className="px-4 py-3 text-left">Name</th>
+                <th className="px-4 py-3 text-left">Mobile</th>
+                <th className="px-4 py-3 text-left">Address</th>
+                <th className="px-4 py-3 text-left">Cause</th>
+                <th className="px-4 py-3 text-left">Location</th>
+                <th className="px-4 py-3 text-left">Reported At</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reports.length > 0 ? (
+                reports.map((report) => (
+                  <tr key={report._id} className="border-b bg-white">
+                    <td className="px-4 py-3">{report.name}</td>
+                    <td className="px-4 py-3">{report.mobileNumber}</td>
+                    <td className="px-4 py-3">{report.address}</td>
+                    <td className="px-4 py-3">{report.cause || "N/A"}</td>
+                    <td className="px-4 py-3">
+                      <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${report.location.lat},${report.location.lng}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 underline hover:text-blue-700"
+                      >
+                        View Location
+                      </a>
+                    </td>
+                    <td className="px-4 py-3">
+                      {new Date(report.createdAt).toLocaleString()}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={6} className="text-center py-3 text-gray-500">
+                    No reports found.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

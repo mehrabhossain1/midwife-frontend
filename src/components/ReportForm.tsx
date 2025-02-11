@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import axios from "axios";
+import { toast } from "sonner";
 
 const reportSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -54,9 +57,24 @@ const ReportForm = () => {
     }
   }, [setValue]);
 
-  const onSubmit = (data: ReportFormValues) => {
+  const onSubmit = async (data: ReportFormValues) => {
     console.log("Report Data:", data);
-    alert("Report submitted successfully!");
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/reports",
+        data
+      );
+
+      if (response.status === 201 || response.status === 200) {
+        toast.success("Report submitted successfully!");
+      } else {
+        toast.error("Something went wrong!");
+      }
+    } catch (error: any) {
+      console.error("Error submitting report:", error);
+      toast.error(error.response?.data?.error || "Failed to submit report.");
+    }
   };
 
   return (

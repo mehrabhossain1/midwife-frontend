@@ -174,7 +174,9 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/v1/reports");
+        const res = await axios.get(
+          "https://midwife-backend.vercel.app/api/v1/reports"
+        );
         setReports(res.data.reports || []);
       } catch (error) {
         console.error("Error fetching reports:", error);

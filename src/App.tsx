@@ -11,7 +11,9 @@ function App() {
 
   const fetchRecentReports = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/v1/reports");
+      const res = await axios.get(
+        "https://midwife-backend.vercel.app/api/v1/reports"
+      );
 
       setLast24HoursReports(res.data.last24HoursReports);
       setAllReportsCount(res.data.allReportsCount);

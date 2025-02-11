@@ -15,7 +15,9 @@ export default function UserMap() {
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/v1/reports");
+        const response = await fetch(
+          "https://midwife-backend.vercel.app/api/v1/reports"
+        );
         const data = await response.json();
 
         if (data.success) {
